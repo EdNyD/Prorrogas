@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <title>Sistema de Prórrogas</title>
+
+    <link rel="icon" href="icon-192.png">
+
+    <style>
+        /* Estilos Globales */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0f1e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Tarjeta Central */
+        .card {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 50px 40px;
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 { 
+            margin: 0 0 10px 0; 
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        p { 
+            color: #94a3b8; 
+            margin-bottom: 35px;
+            font-size: 1rem;
+        }
+
+        /* Botón Principal */
+        .btn {
+            display: inline-block;
+            padding: 18px 36px;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn:hover {
+            background: #059669;
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Indicador de Versión (Píldora Neón) */
+        .version-badge {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 800;
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            backdrop-filter: blur(8px);
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            z-index: 9999;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Sistema de Prórrogas</h1>
+        <p>Gestión académica centralizada</p>
+
+        <a id="btn-acceder" class="btn" target="_top" href="#">
+            INGRESAR AHORA
+        </a>
+    </div>
+
+    <div class="version-badge">VERSIÓN 2.0.3 • LIVE</div>
+
+    <script>
+        // URL de tu Google Apps Script
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzEDxl28qWnRdaIdvskadcAm2tPCWzmn3d1tdZx_QnpS5UXzMHIgGt3q2nUlrYT9C4xhw/exec";
+
+        // Función para actualizar el botón con bypass de caché
+        function configurarBoton() {
+            const btn = document.getElementById('btn-acceder');
+            if (btn) {
+                // Añadimos timestamp para que el navegador no use un link viejo
+                btn.href = `${GAS_URL}?v=${Date.now()}`;
+            }
+        }
+
+        // Ejecutar al cargar la página
+        document.addEventListener('DOMContentLoaded', configurarBoton);
+
+        // CAPA DE LIMPIEZA: Eliminar Service Workers que causan el "secuestro" de caché
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                for (let registration of registrations) {
+                    registration.unregister().then(() => {
+                        console.log('SW Antiguo eliminado.');
+                        // Limpiar almacenamiento de caché físico
+                        if (window.caches) {
+                            caches.keys().then(names => {
+                                for (let name of names) caches.delete(name);
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
